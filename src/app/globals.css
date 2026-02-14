@@ -1,9 +1,9 @@
+/* Import Inter font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import Inter font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
   --glow-color: rgba(0, 212, 255, 0.3);
@@ -53,15 +53,15 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-  
+
   .glow {
     box-shadow: 0 0 20px var(--glow-color);
   }
-  
+
   .card-hover {
     transition: all 0.3s ease;
   }
-  
+
   .card-hover:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px var(--glow-color);
@@ -74,17 +74,17 @@ body {
     @apply bg-accent-cyan text-black font-semibold px-6 py-3 rounded-lg transition-all duration-300;
     @apply hover:shadow-glow hover:bg-[#00e4ff];
   }
-  
+
   .btn-secondary {
     @apply bg-background-card text-text-primary font-semibold px-6 py-3 rounded-lg transition-all duration-300;
     @apply border border-border hover:border-border-light;
   }
-  
+
   .card {
     @apply bg-background-card border border-border rounded-xl p-6;
     @apply shadow-card;
   }
-  
+
   .input {
     @apply bg-background-secondary border border-border rounded-lg px-4 py-3;
     @apply text-text-primary placeholder-text-tertiary;
