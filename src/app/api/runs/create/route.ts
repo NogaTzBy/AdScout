@@ -6,6 +6,9 @@ import { COUNTRY_LANGUAGES } from '@/types/api';
 import type { CreateRunRequest, CreateRunResponse, Country } from '@/types/api';
 import { waitUntil } from '@vercel/functions';
 
+export const maxDuration = 60; // Allow up to 60 seconds on Vercel Hobby plan
+
+
 /**
  * POST /api/runs/create
  * Create a new research run
