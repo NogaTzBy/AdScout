@@ -1,0 +1,30 @@
+
+> adscout@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.100.104:3000
+- Environments: .env
+
+✓ Starting...
+✓ Ready in 450ms
+[Run 3fc8bd77-6a8c-4ad7-a217-862b8f41b336] Starting processing...
+[Run 3fc8bd77-6a8c-4ad7-a217-862b8f41b336] Searching Ad Library for 1 keywords...
+[AdLibrary] Using Meta Ad Library API
+[Meta API] GET https://graph.facebook.com/v21.0/ads_archive?search_terms=ebook&ad_reached_countries=["BR"]&...
+ POST /api/runs/create 201 in 3.0s (compile: 248ms, render: 2.8s)
+[Meta API] Error 500: {"error":{"message":"An unknown error has occurred.","type":"OAuthException","code":1,"fbtrace_id":"AAohP9dzjviKoW4taSPetYI"}}
+[AdLibrary] Meta API failed for "ebook", skipping: Error: Meta API returned 500: {"error":{"message":"An unknown error has occurred.","type":"OAuthException","code":1,"fbtrace_id":"AAohP9dzjviKoW4taSPetYI"}}
+    at fetchFromMetaApi (src/lib/ad-library/scraper.ts:97:15)
+    at async searchAdsByKeywords (src/lib/ad-library/scraper.ts:237:33)
+    at async processRun (src/app/api/runs/create/route.ts:114:32)
+   95 |         const errorBody = await res.text();
+   96 |         console.error(`[Meta API] Error ${res.status}: ${errorBody}`);
+>  97 |         throw new Error(`Meta API returned ${res.status}: ${errorBody}`);
+      |               ^
+   98 |     }
+   99 |
+  100 |     const json: MetaApiResponse = await res.json();
+[AdLibrary] Meta API returned 0 results — falling back to mock data
+[?25h

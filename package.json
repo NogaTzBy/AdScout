@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",
+    "@vercel/functions": "^3.4.2",
     "next": "^16.1.6",
     "puppeteer": "^24.37.3",
     "react": "^19.2.4",

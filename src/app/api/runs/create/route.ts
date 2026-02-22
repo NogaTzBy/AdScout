@@ -4,6 +4,7 @@ import { searchAdsByKeywords } from '@/lib/ad-library/scraper';
 import { validateAdvertiser } from '@/lib/ad-library/validator';
 import { COUNTRY_LANGUAGES } from '@/types/api';
 import type { CreateRunRequest, CreateRunResponse, Country } from '@/types/api';
+import { waitUntil } from '@vercel/functions';
 
 /**
  * POST /api/runs/create
@@ -76,10 +77,12 @@ export async function POST(request: NextRequest) {
 
         const runId = (run as any).id;
 
-        // Process in background (don't wait for completion)
-        processRun(runId, country, keywords, filters).catch(err => {
-            console.error('Background processing error:', err);
-        });
+        // Process in background (use waitUntil for Vercel Serverless Functions)
+        waitUntil(
+            processRun(runId, country, keywords, filters).catch(err => {
+                console.error('Background processing error:', err);
+            })
+        );
 
         const response: CreateRunResponse = {
             runId,
