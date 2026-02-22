@@ -9,32 +9,35 @@ const config: Config = {
     theme: {
         extend: {
             colors: {
-                // Apple-style dark mode palette
-                background: {
-                    DEFAULT: '#000000',
-                    secondary: '#0a0a0a',
-                    card: '#1c1c1e',
-                },
-                text: {
-                    primary: '#ffffff',
-                    secondary: '#a8a8a8',
-                    tertiary: '#6e6e73',
-                },
-                accent: {
-                    cyan: '#00d4ff',
-                    blue: '#0071e3',
-                },
-                border: {
-                    DEFAULT: '#2c2c2e',
-                    light: '#3a3a3c',
-                },
+                primary: "#FF5F1F",
+                "background-light": "#FFFFFF",
+                "ios-bg": "#FBFBFB",
+                "ios-gray": "#F5F5F7",
+                "ios-gray-2": "#F2F2F7",
+                "ios-black": "#1D1D1F",
+                "soft-gray": "#86868B",
             },
             fontFamily: {
-                sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'sans-serif'],
+                display: ["Manrope", "sans-serif"],
+                sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+            },
+            fontWeight: {
+                500: "500",
+                600: "600",
+                700: "700",
+                800: "800",
+            },
+            borderRadius: {
+                DEFAULT: "1rem",
+                lg: "1.5rem",
+                xl: "24px",
+                "2xl": "32px",
             },
             boxShadow: {
-                'glow': '0 0 20px rgba(0, 212, 255, 0.3)',
-                'card': '0 4px 24px rgba(0, 0, 0, 0.4)',
+                premium: "0 20px 60px -15px rgba(0, 0, 0, 0.05)",
+                card: "0 2px 10px rgba(0, 0, 0, 0.04)",
+                "card-hover": "0 8px 24px rgba(0, 0, 0, 0.06)",
+                "glow-orange": "0 0 15px rgba(255, 95, 31, 0.4)",
             },
         },
     },

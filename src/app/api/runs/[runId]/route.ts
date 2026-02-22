@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase/client';
+import { supabaseAdmin } from '@/lib/supabase/client';
 import type { GetRunResponse } from '@/types/api';
 
 /**
@@ -14,7 +14,7 @@ export async function GET(
         const { runId } = await params;
 
         // Fetch run
-        const { data: run, error: runError } = await supabase
+        const { data: run, error: runError } = await supabaseAdmin
             .from('runs')
             .select('*')
             .eq('id', runId)
@@ -28,7 +28,7 @@ export async function GET(
         }
 
         // Count candidates
-        const { count: candidatesCount } = await supabase
+        const { count: candidatesCount } = await supabaseAdmin
             .from('external_candidates')
             .select('*', { count: 'exact', head: true })
             .eq('run_id', runId);

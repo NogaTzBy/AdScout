@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase/client';
+import { supabaseAdmin } from '@/lib/supabase/client';
 import type { CandidateResponse } from '@/types/api';
+
 
 /**
  * GET /api/runs/[runId]/candidates
@@ -12,20 +13,12 @@ export async function GET(
 ) {
     try {
         const { runId } = await params;
-        const { searchParams } = new URL(request.url);
-        const status = searchParams.get('status'); // Filter by status
 
-        let query = supabase
+        const { data: candidates, error } = await supabaseAdmin
             .from('external_candidates')
             .select('*')
             .eq('run_id', runId)
             .order('total_score', { ascending: false });
-
-        if (status) {
-            query = query.eq('status', status);
-        }
-
-        const { data: candidates, error } = await query;
 
         if (error) {
             console.error('Error fetching candidates:', error);
@@ -35,8 +28,7 @@ export async function GET(
             );
         }
 
-        // Type assertion since Supabase types aren't fully inferred
-        const response: CandidateResponse[] = (candidates as any[] || []).map((c: any) => ({
+        const response: CandidateResponse[] = (candidates || []).map((c: any) => ({
             id: c.id,
             advertiserName: c.advertiser_name,
             productDetected: c.product_detected,
@@ -45,8 +37,9 @@ export async function GET(
             duplicatesScore: c.duplicates_score,
             totalScore: c.total_score,
             validationReasons: c.validation_reasons,
-            status: c.status,
             adLibraryPageUrl: c.ad_library_page_url,
+            keywordOrigin: c.keyword_origin,
+            arAdsCount: c.ar_ads_count,
         }));
 
         return NextResponse.json(response);

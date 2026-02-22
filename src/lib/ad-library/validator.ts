@@ -140,25 +140,15 @@ export function detectDuplicates(ads: AdData[]): number {
 
     let duplicateCount = 0;
     const seenTexts = new Set<string>();
-    const seenImages = new Set<string>();
 
     for (const ad of ads) {
         // Check text duplicates
         const normalizedText = normalizeText(ad.adText);
-        if (seenTexts.has(normalizedText) && normalizedText.length > 10) {
+        // If text is too short, we don't count it as a duplicate to avoid false positives on empty/short ads
+        if (seenTexts.has(normalizedText) && normalizedText.length > 5) {
             duplicateCount++;
         } else {
             seenTexts.add(normalizedText);
-        }
-
-        // Check image duplicates
-        for (const imageUrl of ad.imageUrls) {
-            const imageKey = extractImageKey(imageUrl);
-            if (seenImages.has(imageKey)) {
-                duplicateCount++;
-            } else {
-                seenImages.add(imageKey);
-            }
         }
     }
 
@@ -175,15 +165,6 @@ function normalizeText(text: string): string {
         .replace(/[^\w\s]/g, '')
         .replace(/\s+/g, ' ')
         .trim();
-}
-
-/**
- * Extract image key from URL for duplicate detection
- */
-function extractImageKey(url: string): string {
-    // Extract the unique hash/ID from Facebook CDN URL
-    const match = url.match(/\/([a-f0-9]+)_/);
-    return match ? match[1] : url;
 }
 
 /**

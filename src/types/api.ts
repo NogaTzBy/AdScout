@@ -63,4 +63,6 @@ export interface CandidateResponse {
     validationReasons: string;
     status: CandidateStatus;
     adLibraryPageUrl?: string;
+    keywordOrigin?: string;
+    arAdsCount?: number | null;
 }

@@ -126,7 +126,7 @@ async function processRun(
             minDuplicatesScore: filters?.minDuplicatesScore || 0.3,
         };
 
-        const candidates = [];
+        const candidates: any[] = [];
 
         for (const [advertiserName, advertiserData] of advertisersMap.entries()) {
             const metrics = validateAdvertiser(advertiserData, validationCriteria);
@@ -146,7 +146,36 @@ async function processRun(
                 total_score: metrics.totalScore,
                 validation_reasons: metrics.reasons.join(' | '),
                 status: metrics.passed ? 'approved_for_ar' : 'pending',
+                ar_ads_count: null, // Will be updated in the next step
             });
+        }    // Find AR matches for approved candidates
+        for (const candidate of candidates) {
+            if (candidate.status === 'approved_for_ar') {
+                console.log(`[Run ${runId}] Cross-checking candidate ${candidate.advertiser_name} (Product: ${candidate.product_detected}) in AR...`);
+                try {
+                    // Search in AR using the detected product
+                    // Using limit 100 to get a good estimate of total ads
+                    const arAdvertisersMap = await searchAdsByKeywords({
+                        country: 'AR',
+                        keywords: [candidate.product_detected],
+                        limit: 100,
+                    });
+
+                    // Count total active ads in AR for this product across all advertisers
+                    let totalArAds = 0;
+                    for (const arAdvertiser of arAdvertisersMap.values()) {
+                        totalArAds += arAdvertiser.activeAdsCount;
+                    }
+
+                    candidate.ar_ads_count = totalArAds;
+                    console.log(`[Run ${runId}] Found ${totalArAds} total ads in AR for "${candidate.product_detected}"`);
+                } catch (error) {
+                    console.error(`[Run ${runId}] Failed to cross-check in AR:`, error);
+                    candidate.ar_ads_count = 0;
+                }
+            } else {
+                candidate.ar_ads_count = null;
+            }
         }
 
         // Insert candidates
