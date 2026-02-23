@@ -221,37 +221,21 @@ function generateMockAdvertisers(
 /*  PUBLIC ENTRY POINT                                                  */
 /* ------------------------------------------------------------------ */
 
+import { fetchFromApify } from './apify-client';
+
 export async function searchAdsByKeywords(
     params: AdLibrarySearchParams
 ): Promise<Map<string, AdvertiserData>> {
     const { country, keywords, limit = 50 } = params;
-    const token = process.env.META_ACCESS_TOKEN;
 
-    // ─── Use Meta API if token is set ────────────────────────────────
-    if (token && token !== 'your-meta-access-token') {
-        console.log('[AdLibrary] Using Meta Ad Library API');
-        const allRecords: MetaAdRecord[] = [];
+    // Use Apify Client to get realistic scraping data
+    console.log(`[AdLibrary] Delegating search to Apify for ${keywords.length} keywords in ${country}`);
 
-        for (const kw of keywords) {
-            try {
-                const records = await fetchFromMetaApi(kw, country, limit, token);
-                allRecords.push(...records);
-            } catch (err) {
-                console.error(`[AdLibrary] Meta API failed for "${kw}", skipping:`, err);
-            }
-            await delay(500); // polite rate limiting
-        }
-
-        if (allRecords.length > 0) {
-            return metaRecordsToAdvertisers(allRecords, country);
-        }
-
-        console.warn('[AdLibrary] Meta API returned 0 results — falling back to mock data');
-    } else {
-        console.log('[AdLibrary] META_ACCESS_TOKEN not set — using mock data');
+    try {
+        const advertisersMap = await fetchFromApify(country, keywords, limit);
+        return advertisersMap;
+    } catch (error) {
+        console.error('[AdLibrary] Apify execution failed:', error);
+        throw error; // Let the route handler catch this
     }
-
-    // ─── Mock fallback ────────────────────────────────────────────────
-    await delay(1500); // simulate realistic latency
-    return generateMockAdvertisers(keywords, country, 5);
 }
